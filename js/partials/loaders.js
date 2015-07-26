@@ -47,6 +47,6 @@ SHADER_LOADER.loadAll( SHADERS, {
 
 var TEXTURES = {};
 var TEXTURE_LOADER = new THREE.TextureLoader( LOADING_MANAGER );
-TEXTURE_LOADER.load( './textures/mc_skymetal.jpg', ( tex ) => {
+TEXTURE_LOADER.load( './textures/mc_red.jpg', ( tex ) => {
 	TEXTURES.matcap = tex;
 } );

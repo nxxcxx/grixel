@@ -16,20 +16,16 @@ function main() {
    window.grid = createGrid();
    SCENE.add( grid );
 
-   window.hud = new HUD( RENDERER );
+   // window.grid2 = createGrid();
+   // grid2.rotateZ( Math.PI * 0.5 );
+   // grid2.position.set( 256, 256, 0 );
+   // SCENE.add( grid2 );
+   //
+   // window.grid3 = createGrid();
+   // grid3.rotateX( Math.PI * 0.5 );
+   // grid3.position.set( 0, 256, -256 );
+   // SCENE.add( grid3 );
 
-   // // test mapcap shader
-   // var sph = new THREE.SphereGeometry( 250, 64, 64 );
-   // var sphShader = new THREE.ShaderMaterial( {
-   //
-	// 	uniforms: {
-	// 		tMatcap: { type: 't', value: TEXTURES.matcap },
-	// 	},
-	// 	vertexShader: SHADERS.matcapVert,
-	// 	fragmentShader: SHADERS.matcapFrag
-   //
-	// } );
-   // window.sphMesh = new THREE.Mesh( sph, sphShader );
-   // SCENE.add( sphMesh );
+   window.hud = new HUD( RENDERER );
 
 }
