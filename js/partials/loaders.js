@@ -35,13 +35,18 @@ SHADER_LOADER.loadAll = ( SHADERS, urlObj ) => {
 
 SHADER_LOADER.loadAll( SHADERS, {
 
-	Avert: './shaders/shaderA.vert',
-	Afrag: './shaders/shaderA.frag'
+	gridVert: './shaders/grid.vert',
+	gridFrag: './shaders/grid.frag',
+	hudVert: './shaders/hud.vert',
+	hudFrag: './shaders/hud.frag',
+	passVert: './shaders/pass.vert',
+	passFrag: './shaders/pass.frag',
+	noiseFrag: './shaders/noise.frag',
 
 } );
 
-// var TEXTURES = {};
-// var TEXTURE_LOADER = new THREE.TextureLoader( LOADING_MANAGER );
-// TEXTURE_LOADER.load( '', ( tex ) => {
-// 	TEXTURES.name = tex;
-// } );
+var TEXTURES = {};
+var TEXTURE_LOADER = new THREE.TextureLoader( LOADING_MANAGER );
+TEXTURE_LOADER.load( './textures/mc_skymetal.jpg', ( tex ) => {
+	TEXTURES.matcap = tex;
+} );

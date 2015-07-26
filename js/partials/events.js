@@ -32,4 +32,6 @@ function onWindowResize() {
 	RENDERER.setSize( WIDTH, HEIGHT );
 	RENDERER.setPixelRatio( PIXEL_RATIO );
 
+	hud.update();
+
 }

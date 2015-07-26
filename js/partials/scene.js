@@ -10,12 +10,13 @@ var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var PIXEL_RATIO = window.devicePixelRatio || 1;
 var SCREEN_RATIO = WIDTH/HEIGHT;
+var CLOCK = new THREE.Clock();
 
 // ---- Settings
 	var SCENE_SETTINGS = {
 
 		bgColor: 0x24242d,
-		enableGridHelper: true,
+		enableGridHelper: false,
 		enableAxisHelper: true
 
 	};
@@ -58,3 +59,4 @@ var SCREEN_RATIO = WIDTH/HEIGHT;
 		gridHelper.visible = !!SCENE_SETTINGS.enableGridHelper;
 		axisHelper.visible = !!SCENE_SETTINGS.enableAxisHelper;
 	}
+	updateHelpers();
