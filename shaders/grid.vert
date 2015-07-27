@@ -21,7 +21,7 @@ void main() {
 
    vec3 newPosition = position;
    if ( topQuad > 0.0 ) {
-      newPosition.y += texture2D( tNoise, uv ).r * 80.0;
+      newPosition.y += texture2D( tNoise, uv ).r * 50.0;
    }
 
    // scale xz

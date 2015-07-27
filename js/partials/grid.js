@@ -1,7 +1,8 @@
-function createGrid() {
+// warning: ugly code
+function createVoxelGrid() {
 
    var gridSize = 512;
-   var gridResolution = 64;
+   var gridResolution = 128;
 
    var halfGridSize = gridSize * 0.5;
    var cellSize = gridSize / gridResolution;
@@ -45,37 +46,47 @@ function createGrid() {
             var cp = -halfGridSize + ( c + 1 ) * cellSize;
 
             var vv = computeVoxelVertices();
-
-            // quad idx
-            [  3, 2, 1, 1, 0, 3, // -y
-               4, 5, 6, 6, 7, 4, // +y
-               0, 1, 5, 5, 4, 0, // +z
-               2, 3, 7, 7, 6, 2, // -z
-               3, 0, 4, 4, 7, 3, // +x
-               1, 2, 6, 6, 5, 1  // -x
-            ].forEach( ( qidx, idx ) => {
+            /*
+                6–––––––––7
+               /|        /|
+              / |       / |    +y
+             5–––––––––4  |     |
+             |  |      |  |     |
+             |  2––––––|––3     +–––––+x
+             | /       | /     /
+             |/        |/     /
+             1–––––––––0    +z
+            */
+            [  // Face order: CCW
+               6, 5, 4, 4, 7, 6, // +y
+               1, 2, 3, 3, 0, 1, // -y
+               5, 1, 0, 0, 4, 5, // +z
+               7, 3, 2, 2, 6, 7, // -z
+               4, 0, 3, 3, 7, 4, // +x
+               6, 2, 1, 1, 5, 6  // -x
+            ].forEach( qidx => {
                final.push( vv[ qidx ][ 0 ] + rp );
                final.push( vv[ qidx ][ 1 ] );
                final.push( vv[ qidx ][ 2 ] + cp );
 
                // flag topQuad to displace in shader
-               if ( qidx === 4 || qidx === 5 || qidx === 6 || qidx === 7 ) topQuad.push( 1.0 );
-               else topQuad.push( -1.0 );
+               if ( qidx >= 4 && qidx <= 7 ) {
+                  topQuad.push( 1.0 );
+               } else {
+                  topQuad.push( -1.0 );
+               }
 
                centroid.push( rp, cp );
                here.push( ( r + 0.5 ) / gridResolution, ( c + 0.5 ) / gridResolution );
 
             } );
 
-            // -y +y
-            normals.push( 0, -1, 0, 0, -1, 0, 0, -1, 0 );normals.push( 0, -1, 0, 0, -1, 0, 0, -1, 0 );
-            normals.push( 0,  1, 0, 0,  1, 0, 0,  1, 0 );normals.push( 0,  1, 0, 0,  1, 0, 0,  1, 0 );
-            // +z -z
-            normals.push( 0, 0,  1, 0, 0,  1, 0, 0,  1 );normals.push( 0, 0,  1, 0, 0,  1, 0, 0,  1 );
-            normals.push( 0, 0, -1, 0, 0, -1, 0, 0, -1 );normals.push( 0, 0, -1, 0, 0, -1, 0, 0, -1 );
-            // +x -x
-            normals.push(  1, 0, 0,  1, 0, 0,  1, 0, 0 );normals.push(  1, 0, 0,  1, 0, 0,  1, 0, 0 );
-            normals.push( -1, 0, 0, -1, 0, 0, -1, 0, 0 );normals.push( -1, 0, 0, -1, 0, 0, -1, 0, 0 );
+            normals.push( 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0 ); // +y
+            normals.push( 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0 ); // -y
+            normals.push( 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1 ); // +z
+            normals.push( 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1 ); // -z
+            normals.push(  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0 ); // +x
+            normals.push( -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0 ); // -x
 
          }
 
@@ -111,19 +122,10 @@ function createGrid() {
          here: { type: 'v2', value: null }
 		},
 		vertexShader: SHADERS.gridVert,
-		fragmentShader: SHADERS.gridFrag,
-      side: THREE.BackSide,
-      // side: THREE.DoubleSide,
-      // transparent: true,
-      // depthTest: false,
-      // depthWrite: false,
-      // blending: THREE.AdditiveBlending
+		fragmentShader: SHADERS.gridFrag
 
 	} );
 
-   // var gridMesh = new THREE.PointCloud( gridGeom, new THREE.PointCloudMaterial( { size: 1 } ) );
-   // var gridMesh = new THREE.Mesh( gridGeom, new THREE.MeshBasicMaterial() );
-   // var gridMesh = new THREE.Mesh( gridGeom, new THREE.MeshBasicMaterial({ wireframe: true }) );
    var gridMesh = new THREE.Mesh( gridGeom, gridShader );
 
 	return gridMesh;

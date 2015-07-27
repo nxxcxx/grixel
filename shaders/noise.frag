@@ -84,13 +84,19 @@ uniform float time;
 
 float fbm( vec2 p ) {
 
-	float freq = 3.0;
-	float z = time * 0.5;
-   float res =  snoise( vec3( p * freq * 1.0, z ) ) * 1.0   +
-                snoise( vec3( p * freq * 2.0, z ) ) * 0.5   +
-                snoise( vec3( p * freq * 4.0, z ) ) * 0.25  +
-	             snoise( vec3( p * freq * 8.0, z ) ) * 0.125 ;
-   return res;
+	float freq = 4.0;
+	float z = time * 0.05;
+	vec3 uvw = vec3( p, z );
+
+	float persistence = 0.5;
+
+	float res = 0.0;
+	for( int i = 0; i < 4; i ++ ) {
+		float amp = pow( persistence, float( i ) );
+		res += snoise( uvw * pow( 2.0, float( i ) ) * freq ) * amp ;
+	}
+
+	return res;
 
 }
 
@@ -102,9 +108,14 @@ void main()	{
    float freq = 3.0;
 	vec2 oxy = vec2( 0.0, 0.0 );
 
-   float noise = fbm( uv + oxy ) * 0.5 + 0.5;
-   noise = smoothstep( 0.5, 1.0, noise );
+   // float nx = fbm( uv + oxy ) * 0.5 + 0.5;
+   // nx = smoothstep( 0.5, 1.0, noise );
 
-	gl_FragColor = vec4( vec3( noise ), 0.0 );
+	float noise = fbm( uv + oxy ) * 0.5 + 0.5;
+   float nb = smoothstep( 0.5, 1.0, noise );
+   float nc = smoothstep( 0.0, 2.0, noise ) * 0.8;
+   float nx = nb + nc;
+
+	gl_FragColor = vec4( vec3( nx ), 0.0 );
 
 }

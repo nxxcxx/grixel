@@ -13,7 +13,7 @@ function main() {
 	FBOC.addPass( 'noisePass', SHADERS.noiseFrag, null );
    FBOC.getPass( 'noisePass' ).attachUniform( uniformsInput );
 
-   window.grid = createGrid();
+   window.grid = createVoxelGrid();
    SCENE.add( grid );
 
    // window.grid2 = createGrid();
