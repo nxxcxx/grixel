@@ -16,12 +16,15 @@ function main() {
    window.grid = createVoxelGrid();
    SCENE.add( grid );
 
-   // window.grid2 = createGrid();
+   CAMERA.position.set( -354.9, 241.9, 374.6 );
+   CAMERA.rotation.set( -0.573, -0.672, -0.382 );
+
+   // window.grid2 = createVoxelGrid();
    // grid2.rotateZ( Math.PI * 0.5 );
    // grid2.position.set( 256, 256, 0 );
    // SCENE.add( grid2 );
    //
-   // window.grid3 = createGrid();
+   // window.grid3 = createVoxelGrid();
    // grid3.rotateX( Math.PI * 0.5 );
    // grid3.position.set( 0, 256, -256 );
    // SCENE.add( grid3 );

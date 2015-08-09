@@ -38,6 +38,8 @@ function createVoxelGrid() {
 
    function constructVoxel() {
 
+      var vv = computeVoxelVertices();
+
       for ( var r = 0; r < gridResolution; r ++ ) {
 
          for ( var c = 0; c < gridResolution; c ++ ) {
@@ -45,19 +47,18 @@ function createVoxelGrid() {
             var rp = -halfGridSize + ( r + 1 ) * cellSize;
             var cp = -halfGridSize + ( c + 1 ) * cellSize;
 
-            var vv = computeVoxelVertices();
             /*
-                6–––––––––7
-               /|        /|
-              / |       / |    +y
-             5–––––––––4  |     |
-             |  |      |  |     |
-             |  2––––––|––3     +–––––+x
-             | /       | /     /
-             |/        |/     /
-             1–––––––––0    +z
+                6–––––––––––7
+               /|          /|
+              / |         / |    +y
+             5–––––––––––4  |     |
+             |  |        |  |     |
+             |  2––––––––|––3     +–––––––+x
+             | /         | /     /
+             |/          |/     /
+             1–––––––––––0    +z
             */
-            [  // Face order: CCW
+            [  // face order: CCW
                6, 5, 4, 4, 7, 6, // +y
                1, 2, 3, 3, 0, 1, // -y
                5, 1, 0, 0, 4, 5, // +z
@@ -65,6 +66,7 @@ function createVoxelGrid() {
                4, 0, 3, 3, 7, 4, // +x
                6, 2, 1, 1, 5, 6  // -x
             ].forEach( qidx => {
+
                final.push( vv[ qidx ][ 0 ] + rp );
                final.push( vv[ qidx ][ 1 ] );
                final.push( vv[ qidx ][ 2 ] + cp );
@@ -81,12 +83,18 @@ function createVoxelGrid() {
 
             } );
 
-            normals.push( 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0 ); // +y
-            normals.push( 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0 ); // -y
-            normals.push( 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1 ); // +z
-            normals.push( 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1 ); // -z
-            normals.push(  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0,  1, 0, 0 ); // +x
-            normals.push( -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0 ); // -x
+            [  // quad normals
+               [  0,  1,  0 ], // +y
+               [  0, -1,  0 ], // -y
+               [  0,  0,  1 ], // +z
+               [  0,  0, -1 ], // -z
+               [  1,  0,  0 ], // +x
+               [ -1,  0,  0 ]  // -x
+            ].forEach( quadNormal => {
+               for( var i = 0; i < 6; i ++ ) {
+                  quadNormal.forEach( p => normals.push( p ) );
+               }
+            } );
 
          }
 
@@ -116,7 +124,7 @@ function createVoxelGrid() {
 			tMatcap: { type: 't', value: TEXTURES.matcap },
          tNoise:  { type: 't', value: null },
 		},
-		attributes: { // need to specify custom attributes .addAttribute above won't do
+		attributes: { // custom attribs go here
 			topQuad: { type: 'f', value: null },
          centroid: { type: 'v2', value: null },
          here: { type: 'v2', value: null }

@@ -34,6 +34,8 @@ void main() {
    // float height = texture2D( tNoise, vuv ).r;
    // color = pal( height, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(2.0,1.0,0.0),vec3(0.5,0.20,0.25) );
 
+   // color = vec3( 0.0, 0.008, 0.01 );
+
    gl_FragColor = vec4( color, 1.0 );
 
 }
