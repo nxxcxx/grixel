@@ -62,7 +62,7 @@ var CLOCK = new THREE.Clock();
 // ---- Settings
 var SCENE_SETTINGS = {
 
-	bgColor: 2368557,
+	bgColor: 0x24242d,
 	enableGridHelper: false,
 	enableAxisHelper: true
 
@@ -93,7 +93,7 @@ CANVAS.appendChild(STATS.domElement);
 
 // ---- grid & axis helper
 var gridHelper = new THREE.GridHelper(600, 50);
-gridHelper.setColors(48127, 16777215);
+gridHelper.setColors(0x00bbff, 0xffffff);
 gridHelper.material.opacity = 0.1;
 gridHelper.material.transparent = true;
 gridHelper.position.y = -300;
@@ -137,7 +137,7 @@ function initGui() {
 function updateSettings() {
 
 	CAMERA.updateProjectionMatrix();
-	RENDERER.setClearColor(SCENE_SETTINGS.bgColor, 1);
+	RENDERER.setClearColor(SCENE_SETTINGS.bgColor, 1.0);
 }
 
 function updateGuiDisplay() {
@@ -188,12 +188,12 @@ FBOCompositor.prototype = {
 	_getWebGLExtensions: function _getWebGLExtensions() {
 
 		var gl = this.renderer.getContext();
-		if (!gl.getExtension('OES_texture_float')) {
-			console.error('No support for float textures!');
+		if (!gl.getExtension("OES_texture_float")) {
+			console.error("No support for float textures!");
 		}
 
 		if (gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) === 0) {
-			console.error('No support for vertex shader textures!');
+			console.error("No support for vertex shader textures!");
 		}
 	},
 
@@ -349,7 +349,7 @@ function HUD(renderer) {
 
 	this.renderer = renderer;
 	this.HUDMargin = 0.05;
-	var hudHeight = 2 / 4; // 2.0 = full screen size
+	var hudHeight = 2.0 / 4.0; // 2.0 = full screen size
 	var hudWidth = hudHeight;
 
 	this.HUDCam = new THREE.OrthographicCamera(-SCREEN_RATIO, SCREEN_RATIO, 1, -1, 1, 10);
@@ -486,9 +486,9 @@ function createVoxelGrid() {
 
                // flag topQuad to displace in shader
                if (qidx >= 4 && qidx <= 7) {
-                  topQuad.push(1);
+                  topQuad.push(1.0);
                } else {
-                  topQuad.push(-1);
+                  topQuad.push(-1.0);
                }
 
                centroid.push(rp, cp);
@@ -535,56 +535,52 @@ function createVoxelGrid() {
          tMatcap: { type: 't', value: TEXTURES.matcap },
          tNoise: { type: 't', value: null }
       },
-      attributes: { // need to also specify custom attributes after .addAttribute
+      attributes: { // custom attribs go here
          topQuad: { type: 'f', value: null },
          centroid: { type: 'v2', value: null },
          here: { type: 'v2', value: null }
       },
       vertexShader: SHADERS.gridVert,
       fragmentShader: SHADERS.gridFrag
+
    });
 
    var gridMesh = new THREE.Mesh(gridGeom, gridShader);
 
    return gridMesh;
 }
-// side: THREE.DoubleSide,
-// transparent: true,
-// blending: THREE.AdditiveBlending,
-// depthTest: false,
-// depthWrite: false
 
 //source: main.js
 function main() {
 
-  initGui();
+   initGui();
 
-  window.uniformsInput = {
-    time: { type: 'f', value: 0 }
-  };
+   window.uniformsInput = {
+      time: { type: 'f', value: 0.0 }
+   };
 
-  var fboSize = 512;
-  window.FBOC = new FBOCompositor(RENDERER, fboSize, SHADERS.passVert);
-  FBOC.addPass('noisePass', SHADERS.noiseFrag, null);
-  FBOC.getPass('noisePass').attachUniform(uniformsInput);
+   var fboSize = 512;
+   window.FBOC = new FBOCompositor(RENDERER, fboSize, SHADERS.passVert);
+   FBOC.addPass('noisePass', SHADERS.noiseFrag, null);
+   FBOC.getPass('noisePass').attachUniform(uniformsInput);
 
-  window.grid = createVoxelGrid();
-  SCENE.add(grid);
+   window.grid = createVoxelGrid();
+   SCENE.add(grid);
 
-  CAMERA.position.set(-354.9, 241.9, 374.6);
-  CAMERA.rotation.set(-0.573, -0.672, -0.382);
+   CAMERA.position.set(-354.9, 241.9, 374.6);
+   CAMERA.rotation.set(-0.573, -0.672, -0.382);
 
-  // window.grid2 = createVoxelGrid();
-  // grid2.rotateZ( Math.PI * 0.5 );
-  // grid2.position.set( 256, 256, 0 );
-  // SCENE.add( grid2 );
-  //
-  // window.grid3 = createVoxelGrid();
-  // grid3.rotateX( Math.PI * 0.5 );
-  // grid3.position.set( 0, 256, -256 );
-  // SCENE.add( grid3 );
+   // window.grid2 = createVoxelGrid();
+   // grid2.rotateZ( Math.PI * 0.5 );
+   // grid2.position.set( 256, 256, 0 );
+   // SCENE.add( grid2 );
+   //
+   // window.grid3 = createVoxelGrid();
+   // grid3.rotateX( Math.PI * 0.5 );
+   // grid3.position.set( 0, 256, -256 );
+   // SCENE.add( grid3 );
 
-  window.hud = new HUD(RENDERER);
+   window.hud = new HUD(RENDERER);
 }
 
 //source: run.js
@@ -651,24 +647,24 @@ function onWindowResize() {
 
 //source: util.js
 function debounce(func, wait, immediate) {
-	var _this = this,
-	    _arguments = arguments;
+		var _this = this,
+		    _arguments = arguments;
 
-	var timeout;
-	return function () {
+		var timeout;
+		return function () {
 
-		var context = _this,
-		    args = _arguments;
-		var later = function later() {
+				var context = _this,
+				    args = _arguments;
+				var later = function later() {
 
-			timeout = null;
-			if (!immediate) func.apply(context, args);
+						timeout = null;
+						if (!immediate) func.apply(context, args);
+				};
+				var callNow = immediate && !timeout;
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+				if (callNow) func.apply(context, args);
 		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
 }
 
 //# sourceMappingURL=app.js.map
